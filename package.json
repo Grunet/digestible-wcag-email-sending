@@ -1,0 +1,19 @@
+{
+  "name": "digestible-wcag-email-sending",
+  "version": "0.0.1",
+  "description": "Manages which WCAG digest emails to send and who to send them to",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Grunet/digestible-wcag-email-sending.git"
+  },
+  "author": "Grunet",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Grunet/digestible-wcag-email-sending/issues"
+  },
+  "homepage": "https://github.com/Grunet/digestible-wcag-email-sending#readme"
+}
