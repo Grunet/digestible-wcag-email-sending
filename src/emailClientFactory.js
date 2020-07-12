@@ -21,6 +21,9 @@ function createEmailClient(clientId, defaultSettings) {
 
       return new SendGridAdapter(defaultSettings);
       break;
+    default:
+      throw new Error(`${clientId}'s adapter has not been implemented yet`);
+      break;
   }
 }
 
