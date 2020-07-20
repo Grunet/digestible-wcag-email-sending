@@ -1,3 +1,7 @@
 require("dotenv").config();
 
-require("../../../src/index.js");
+const { sendEmailsToRecipients } = require("../../../dist/index.js");
+
+(async function () {
+  await sendEmailsToRecipients();
+})();

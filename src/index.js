@@ -15,7 +15,7 @@ const staticSettings = {
 const sendGridClient = createEmailClient(EmailClients.SendGrid, staticSettings);
 const sendEmailViaSendGrid = sendGridClient.send.bind(sendGridClient);
 
-(async function () {
+async function sendEmailsToRecipients() {
   try {
     await retrieveThenSend({
       getRecipients: getRecipients,
@@ -25,4 +25,8 @@ const sendEmailViaSendGrid = sendGridClient.send.bind(sendGridClient);
   } catch (error) {
     console.error(error);
   }
-})();
+}
+
+module.exports = {
+  sendEmailsToRecipients: sendEmailsToRecipients,
+};
