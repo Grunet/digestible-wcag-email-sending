@@ -8,7 +8,9 @@ const { retrieveThenSend } = require("./retrieveThenSend.js");
 
 async function sendEmailsToRecipients(inputs) {
   const {
-    apiKeys: { sendGrid: { sendOnly:sendOnlyApiKey } },
+    apiKeys: {
+      sendGrid: { sendOnly: sendOnlyApiKey },
+    },
     emails: { sender },
   } = inputs;
 
@@ -20,7 +22,7 @@ async function sendEmailsToRecipients(inputs) {
 
   const sendGridClient = createEmailClient(
     EmailClients.SendGrid,
-    staticSettings,
+    staticSettings
   );
   const sendEmailViaSendGrid = sendGridClient.send.bind(sendGridClient);
 
@@ -31,7 +33,7 @@ async function sendEmailsToRecipients(inputs) {
       sendEmail: sendEmailViaSendGrid,
     });
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 }
 
