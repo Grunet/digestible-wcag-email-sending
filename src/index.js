@@ -6,16 +6,24 @@ const {
 } = require("./emailClientFactory.js");
 const { retrieveThenSend } = require("./retrieveThenSend.js");
 
-const staticSettings = {
-  apiKey: process.env.DWCAG_APIKEYS_SENDGRID_SENDONLY,
-  from: process.env.DWCAG_EMAILS_SENDER,
-  subject: "WCAG Digest",
-};
+async function sendEmailsToRecipients(inputs) {
+  const {
+    apiKeys: { sendGrid: { sendOnly:sendOnlyApiKey } },
+    emails: { sender },
+  } = inputs;
 
-const sendGridClient = createEmailClient(EmailClients.SendGrid, staticSettings);
-const sendEmailViaSendGrid = sendGridClient.send.bind(sendGridClient);
+  const staticSettings = {
+    apiKey: sendOnlyApiKey,
+    from: sender,
+    subject: "WCAG Digest",
+  };
 
-async function sendEmailsToRecipients() {
+  const sendGridClient = createEmailClient(
+    EmailClients.SendGrid,
+    staticSettings,
+  );
+  const sendEmailViaSendGrid = sendGridClient.send.bind(sendGridClient);
+
   try {
     await retrieveThenSend({
       getRecipients: getRecipients,
