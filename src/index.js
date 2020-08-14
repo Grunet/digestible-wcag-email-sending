@@ -8,7 +8,7 @@ const { retrieveThenSend } = require("./retrieveThenSend.js");
 
 async function sendEmailsToRecipients(inputs) {
   const {
-    apiKeys: {
+apiKeys: {
       sendGrid: { sendOnly: sendOnlyApiKey },
     },
     emails: { sender },
@@ -17,12 +17,11 @@ async function sendEmailsToRecipients(inputs) {
   const staticSettings = {
     apiKey: sendOnlyApiKey,
     from: sender,
-    subject: "WCAG Digest",
   };
 
   const sendGridClient = createEmailClient(
     EmailClients.SendGrid,
-    staticSettings
+    staticSettings,
   );
   const sendEmailViaSendGrid = sendGridClient.send.bind(sendGridClient);
 

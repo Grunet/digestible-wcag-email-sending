@@ -9,16 +9,18 @@ async function getTemplateAtRandom() {
   const metadataObj = await metadataRes.json();
 
   const listOfFilenames = metadataObj["emails"];
-  const randomFilename =
-    listOfFilenames[Math.floor(listOfFilenames.length * Math.random())][
-      "filename"
-    ];
+  const randomEmailMetadata =
+    listOfFilenames[Math.floor(listOfFilenames.length * Math.random())];
 
-  const emailRes = await fetch(`${pathToTemplates}${randomFilename}`);
+  const { filename:chosenFilename, subject:chosenSubject } =
+    randomEmailMetadata;
+
+  const emailRes = await fetch(`${pathToTemplates}${chosenFilename}`);
   const emailHtml = await emailRes.text();
 
   return {
     html: emailHtml,
+    subject: chosenSubject,
   };
 }
 

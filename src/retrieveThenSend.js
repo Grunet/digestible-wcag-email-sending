@@ -2,7 +2,7 @@ async function retrieveThenSend(dependencies) {
   const { getRecipients, getTemplate, sendEmail } = dependencies;
 
   try {
-    const [{ html }, { recipients }] = await Promise.all([
+    const [{ html, subject }, { recipients }] = await Promise.all([
       getTemplate(),
       getRecipients(),
     ]);
@@ -13,6 +13,7 @@ async function retrieveThenSend(dependencies) {
         return {
           to: recipient["emailAddress"],
           html: html,
+          subject: subject,
         };
       });
 
