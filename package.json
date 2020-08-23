@@ -19,6 +19,7 @@
   "dependencies": {
     "@sendgrid/mail": "^7.2.3",
     "digestible-wcag-contact-management": "github:Grunet/digestible-wcag-contact-management#master",
+    "flat": "^5.0.2",
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {

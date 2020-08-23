@@ -7,7 +7,7 @@ const supportedClients = {
 function createEmailClient(clientId, defaultSettings) {
   if (!supportedClients.hasOwnProperty(clientId)) {
     throw new Error(
-      `Unrecognized client id passed to factory: ${clientId.toString()}`,
+      `Unrecognized client id passed to factory: ${clientId.toString()}`
     );
   }
 
@@ -15,7 +15,7 @@ function createEmailClient(clientId, defaultSettings) {
     case SendGrid:
       if (!defaultSettings.hasOwnProperty("apiKey")) {
         throw new Error(
-          "Required API key is missing from the passed SendGrid default settings",
+          "Required API key is missing from the passed SendGrid default settings"
         );
       }
 
@@ -38,7 +38,7 @@ class SendGridAdapter {
   async send(msgData) {
     const msgDataWithDefaults = Object.assign(
       { ...this.__defaultSettings },
-      msgData,
+      msgData
     ); //Shallow copy
 
     const { to, fromEmail, fromName, subject, html } = msgDataWithDefaults;
@@ -53,10 +53,11 @@ class SendGridAdapter {
       html: html,
     };
 
-    for (const [key, value] of Object.entries(msgDataToSend)) {
+    const flattenedMsgDataToSend = require("flat")(msgDataToSend);
+    for (const [key, value] of Object.entries(flattenedMsgDataToSend)) {
       if (!value) {
         throw new Error(
-          `"${key}" is missing from the inputs to the SendGrid mail sending api`,
+          `"${key}" is missing from the inputs to the SendGrid mail sending api`
         );
       }
     }
