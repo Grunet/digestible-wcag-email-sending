@@ -41,12 +41,12 @@ class SendGridAdapter {
       msgData,
     ); //Shallow copy
 
-    const { to, from, fromName, subject, html } = msgDataWithDefaults;
+    const { to, fromEmail, fromName, subject, html } = msgDataWithDefaults;
 
     const msgDataToSend = {
       to: to,
       from: {
-        email: from,
+        email: fromEmail,
         name: fromName,
       },
       subject: subject,
