@@ -17,6 +17,7 @@ apiKeys: {
   const staticSettings = {
     apiKey: sendOnlyApiKey,
     from: sender,
+    fromName: "WCAG of the Day",
   };
 
   const sendGridClient = createEmailClient(
