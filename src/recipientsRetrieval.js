@@ -1,6 +1,8 @@
-const { getSubscribers } = require("digestible-wcag-contact-management");
+async function getRecipients(inputs) {
+  const getSubscribers =
+    inputs?.dependencies?.getSubscribers ??
+    require("digestible-wcag-contact-management").getSubscribers;
 
-async function getRecipients() {
   const { subscribers } = await getSubscribers();
 
   const recipients = Array.from(subscribers).map((accountObj) => {

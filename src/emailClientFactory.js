@@ -35,7 +35,12 @@ class SendGridAdapter {
     this.__defaultSettings = { ...defaults }; //Shallow copy
   }
 
-  async send(msgData) {
+  async send(inputs) {
+    const send =
+      inputs?.dependencies?.sendGrid?.send ??
+      this.__sgMail.send.bind(this.__sgMail);
+
+    const { msgData } = inputs;
     const msgDataWithDefaults = Object.assign(
       { ...this.__defaultSettings },
       msgData
@@ -63,7 +68,7 @@ class SendGridAdapter {
     }
 
     try {
-      await this.__sgMail.send(msgDataToSend);
+      await send(msgDataToSend);
     } catch (error) {
       console.error(error);
       console.error(error?.response?.body);

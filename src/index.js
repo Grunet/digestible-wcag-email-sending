@@ -28,9 +28,18 @@ async function sendEmailsToRecipients(inputs) {
 
   try {
     await retrieveThenSend({
-      getRecipients: getRecipients,
+      getRecipients: async function () {
+        return await getRecipients({
+          dependencies: inputs?.dependencies,
+        });
+      },
       getTemplate: getTemplateAtRandom,
-      sendEmail: sendEmailViaSendGrid,
+      sendEmail: async function (msgData) {
+        await sendEmailViaSendGrid({
+          dependencies: inputs?.dependencies,
+          msgData: msgData,
+        });
+      },
     });
   } catch (error) {
     throw error;
