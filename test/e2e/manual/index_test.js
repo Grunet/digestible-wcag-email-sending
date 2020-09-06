@@ -1,4 +1,6 @@
-require("dotenv").config({ path: require("path").join(__dirname, ".env") });
+require("dotenv").config({
+  path: require("find-config")(".env", { cwd: __dirname }),
+});
 
 const { sendEmailsToRecipients } = require("../../../dist/index.js");
 
