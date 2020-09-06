@@ -4,7 +4,8 @@
   "description": "Manages which WCAG digest emails to send and who to send them to",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "unit-tests": "jest --coverage --testMatch **\\test\\unit\\automated\\*_test.js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "dotenv": "^8.2.0",
-    "find-config": "^1.0.0"
+    "find-config": "^1.0.0",
+    "jest": "^26.4.2"
   }
 }
