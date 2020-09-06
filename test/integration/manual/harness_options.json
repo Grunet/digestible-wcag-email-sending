@@ -1,0 +1,16 @@
+{
+  "recipientsRetrieval": {
+    "useMocks": true,
+    "mockSubscriberData": {
+      "subscribers": [
+        {
+          "email": "Enter a real email address here"
+        }
+      ]
+    }
+  },
+  "emailClientFactory": {
+    "useMocks": true,
+    "outputRedirection": ["console"]
+  }
+}
