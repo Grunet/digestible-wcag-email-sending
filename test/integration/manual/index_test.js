@@ -4,7 +4,7 @@ require("dotenv").config({
 
 const { sendEmailsToRecipients } = require("../../../dist/index.js");
 
-async function test_sendEmailsToRecipients() {
+(async function test_sendEmailsToRecipients() {
   const {
     recipientsRetrieval,
     emailClientFactory,
@@ -14,18 +14,18 @@ async function test_sendEmailsToRecipients() {
     dependencies: {
       getSubscribers: recipientsRetrieval.useMocks
         ? function () {
-            return recipientsRetrieval.mockSubscriberData;
-          }
+          return recipientsRetrieval.mockSubscriberData;
+        }
         : undefined,
       sendGrid: {
         send: emailClientFactory.useMocks
           ? async function (msgDataToSend) {
-              return Promise.all(
-                emailClientFactory.outputRedirection.map((option) =>
-                  __sendRedirectionOptions[option](msgDataToSend)
-                )
-              );
-            }
+            return Promise.all(
+              emailClientFactory.outputRedirection.map((option) =>
+                __sendRedirectionOptions[option](msgDataToSend)
+              ),
+            );
+          }
           : undefined,
       },
     },
@@ -40,7 +40,7 @@ async function test_sendEmailsToRecipients() {
   };
 
   await sendEmailsToRecipients(inputs);
-}
+})();
 
 const __sendRedirectionOptions = {
   console: __sendToConsole,
@@ -51,7 +51,3 @@ function __sendToConsole(msgDataToSend) {
 
   console.log(JSON.stringify(rest, null, 4));
 }
-
-module.exports = {
-  test_sendEmailsToRecipients: test_sendEmailsToRecipients,
-};
