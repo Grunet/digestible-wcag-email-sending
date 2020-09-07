@@ -2,26 +2,25 @@ async function retrieveThenSend(dependencies) {
   const { getRecipients, getTemplate, sendEmail } = dependencies;
 
   try {
-    const [{ html, subject }, { recipients }] = await Promise.all([
+    const [{ html, text, subject }, { recipients }] = await Promise.all([
       getTemplate(),
       getRecipients(),
     ]);
 
     const recipientList = Array.from(recipients);
-    const msgDataList = recipientList
-      .map((recipient) => {
-        return {
-          to: recipient["emailAddress"],
-          html: html,
-          subject: subject,
-        };
-      });
+    const msgDataList = recipientList.map((recipient) => {
+      return {
+        to: recipient["emailAddress"],
+        html: html,
+        text: text,
+        subject: subject,
+      };
+    });
 
     const emailSendingOutcomes = await Promise.allSettled(
-      msgDataList
-        .map((msgData) => {
-          return sendEmail(msgData);
-        }),
+      msgDataList.map((msgData) => {
+        return sendEmail(msgData);
+      })
     );
 
     emailSendingOutcomes.forEach(function (outcome, index) {
@@ -32,7 +31,7 @@ async function retrieveThenSend(dependencies) {
           outcome.reason,
           `\n`,
           `Additional context: `,
-          msgDataList[index],
+          msgDataList[index]
         );
       }
     });

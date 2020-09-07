@@ -12,14 +12,21 @@ async function getTemplateAtRandom() {
   const randomEmailMetadata =
     listOfFilenames[Math.floor(listOfFilenames.length * Math.random())];
 
-  const { filename:chosenFilename, subject:chosenSubject } =
-    randomEmailMetadata;
+  const {
+    filenames: { html: htmlFilename, plainText: plainTextFilename },
+    subject: chosenSubject,
+  } = randomEmailMetadata;
 
-  const emailRes = await fetch(`${pathToTemplates}${chosenFilename}`);
-  const emailHtml = await emailRes.text();
+  const [emailHtml, emailPlainText] = await Promise.all(
+    [htmlFilename, plainTextFilename].map(async function (filename) {
+      const res = await fetch(`${pathToTemplates}${filename}`);
+      return await res.text();
+    })
+  );
 
   return {
     html: emailHtml,
+    text: emailPlainText,
     subject: chosenSubject,
   };
 }

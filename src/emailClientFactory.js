@@ -46,7 +46,14 @@ class SendGridAdapter {
       msgData
     ); //Shallow copy
 
-    const { to, fromEmail, fromName, subject, html } = msgDataWithDefaults;
+    const {
+      to,
+      fromEmail,
+      fromName,
+      subject,
+      html,
+      text,
+    } = msgDataWithDefaults;
 
     const msgDataToSend = {
       to: to,
@@ -56,6 +63,7 @@ class SendGridAdapter {
       },
       subject: subject,
       html: html,
+      text: text,
     };
 
     const flattenedMsgDataToSend = require("flat")(msgDataToSend);
