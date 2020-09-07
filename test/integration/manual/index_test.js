@@ -14,18 +14,18 @@ const { sendEmailsToRecipients } = require("../../../dist/index.js");
     dependencies: {
       getSubscribers: recipientsRetrieval.useMocks
         ? function () {
-          return recipientsRetrieval.mockSubscriberData;
-        }
+            return recipientsRetrieval.mockSubscriberData;
+          }
         : undefined,
       sendGrid: {
         send: emailClientFactory.useMocks
           ? async function (msgDataToSend) {
-            return Promise.all(
-              emailClientFactory.outputRedirection.map((option) =>
-                __sendRedirectionOptions[option](msgDataToSend)
-              ),
-            );
-          }
+              return Promise.all(
+                emailClientFactory.outputRedirection.map((option) =>
+                  __sendRedirectionOptions[option](msgDataToSend)
+                )
+              );
+            }
           : undefined,
       },
     },
