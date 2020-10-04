@@ -1,4 +1,9 @@
 {
+  "inputs": {
+    "sendGridApiKey": "SG.XX...XX is what it should look like",
+    "senderEmail": "Enter a real email address here",
+    "currentSelectionServerURL": "http://localhost:4000/graphql"
+  },
   "recipientsRetrieval": {
     "useMocks": true,
     "mockSubscriberData": {

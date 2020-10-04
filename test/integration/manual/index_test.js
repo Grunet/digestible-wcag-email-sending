@@ -1,11 +1,8 @@
-require("dotenv").config({
-  path: require("find-config")(".env", { cwd: __dirname }),
-});
-
 const { sendEmailsToRecipients } = require("../../../dist/index.js");
 
 (async function test_sendEmailsToRecipients() {
   const {
+    inputs: { sendGridApiKey, senderEmail, currentSelectionServerURL },
     recipientsRetrieval,
     templateRetrieval,
     emailClientFactory,
@@ -35,16 +32,16 @@ const { sendEmailsToRecipients } = require("../../../dist/index.js");
           : undefined,
       },
     },
-    urls: {
-      currentSelectionServer: process.env.DWCAG_URLS_CURRENTSELECTION,
-    },
     apiKeys: {
       sendGrid: {
-        sendOnly: process.env.DWCAG_APIKEYS_SENDGRID_SENDONLY,
+        sendOnly: sendGridApiKey,
       },
     },
     emails: {
-      sender: process.env.DWCAG_EMAILS_SENDER,
+      sender: senderEmail,
+    },
+    urls: {
+      currentSelectionServer: currentSelectionServerURL,
     },
   };
 
