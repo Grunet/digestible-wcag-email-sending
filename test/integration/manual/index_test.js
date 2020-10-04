@@ -7,6 +7,7 @@ const { sendEmailsToRecipients } = require("../../../dist/index.js");
 (async function test_sendEmailsToRecipients() {
   const {
     recipientsRetrieval,
+    templateRetrieval,
     emailClientFactory,
   } = require("./harness_options.json");
 
@@ -15,6 +16,11 @@ const { sendEmailsToRecipients } = require("../../../dist/index.js");
       getSubscribers: recipientsRetrieval.useMocks
         ? function () {
             return recipientsRetrieval.mockSubscriberData;
+          }
+        : undefined,
+      getTemplateData: templateRetrieval.useMocks
+        ? function () {
+            return templateRetrieval.mockTemplateData;
           }
         : undefined,
       sendGrid: {
@@ -28,6 +34,9 @@ const { sendEmailsToRecipients } = require("../../../dist/index.js");
             }
           : undefined,
       },
+    },
+    urls: {
+      currentSelectionServer: process.env.DWCAG_URLS_CURRENTSELECTION,
     },
     apiKeys: {
       sendGrid: {

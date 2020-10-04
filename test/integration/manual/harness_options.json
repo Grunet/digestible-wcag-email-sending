@@ -9,6 +9,14 @@
       ]
     }
   },
+  "templateRetrieval": {
+    "useMocks": true,
+    "mockTemplateData": {
+      "html": "<div>Mock Email</div>",
+      "plainText": "Mock Email",
+      "subject": "Mock Subject"
+    }
+  },
   "emailClientFactory": {
     "useMocks": true,
     "outputRedirection": ["console"]

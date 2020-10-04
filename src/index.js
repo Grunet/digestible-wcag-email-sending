@@ -1,5 +1,5 @@
 const { getRecipients } = require("./recipientsRetrieval.js");
-const { getTemplateAtRandom } = require("./templateRetrieval.js");
+const { getTemplate } = require("./templateRetrieval.js");
 const {
   createEmailClient,
   Clients: EmailClients,
@@ -12,6 +12,7 @@ async function sendEmailsToRecipients(inputs) {
       sendGrid: { sendOnly: sendOnlyApiKey },
     },
     emails: { sender },
+    urls: { currentSelectionServer: currentSelectionURL },
   } = inputs;
 
   const staticSettings = {
@@ -33,7 +34,12 @@ async function sendEmailsToRecipients(inputs) {
           dependencies: inputs?.dependencies,
         });
       },
-      getTemplate: getTemplateAtRandom,
+      getTemplate: async function () {
+        return await getTemplate({
+          dependencies: inputs?.dependencies,
+          path: currentSelectionURL,
+        });
+      },
       sendEmail: async function (msgData) {
         await sendEmailViaSendGrid({
           dependencies: inputs?.dependencies,

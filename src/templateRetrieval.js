@@ -1,36 +1,46 @@
 const fetch = require("node-fetch");
 
-const pathToTemplates =
-  "https://raw.githubusercontent.com/Grunet/digestible-wcag-sc-emails/master/dist/";
-const metadataFilename = "emailMetadata.json";
+async function getTemplate(inputs) {
+  const getTemplateDataDelegate =
+    inputs?.dependencies?.getTemplateData ??
+    getTemplateData.bind({}, inputs.path);
 
-async function getTemplateAtRandom() {
-  const metadataRes = await fetch(`${pathToTemplates}${metadataFilename}`);
-  const metadataObj = await metadataRes.json();
-
-  const listOfFilenames = metadataObj["emails"];
-  const randomEmailMetadata =
-    listOfFilenames[Math.floor(listOfFilenames.length * Math.random())];
-
-  const {
-    filenames: { html: htmlFilename, plainText: plainTextFilename },
-    subject: chosenSubject,
-  } = randomEmailMetadata;
-
-  const [emailHtml, emailPlainText] = await Promise.all(
-    [htmlFilename, plainTextFilename].map(async function (filename) {
-      const res = await fetch(`${pathToTemplates}${filename}`);
-      return await res.text();
-    })
-  );
+  const { html, plainText, subject } = await getTemplateDataDelegate();
 
   return {
-    html: emailHtml,
-    text: emailPlainText,
-    subject: chosenSubject,
+    html: html,
+    text: plainText,
+    subject: subject,
   };
 }
 
+async function getTemplateData(path) {
+  const res = await fetch(path, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      query: `{ 
+        current { 
+          html, 
+          plainText, 
+          subject 
+        } 
+      }
+    `,
+    }),
+  });
+  const resObj = await res.json();
+
+  const {
+    data: { current },
+  } = resObj;
+
+  return current;
+}
+
 module.exports = {
-  getTemplateAtRandom: getTemplateAtRandom,
+  getTemplate: getTemplate,
 };
