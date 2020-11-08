@@ -19,7 +19,7 @@
   "homepage": "https://github.com/Grunet/digestible-wcag-email-sending#readme",
   "dependencies": {
     "@sendgrid/mail": "^7.3.0",
-    "amazon-cognito-identity-js": "^4.5.0",
+    "amazon-cognito-identity-js": "4.5.0",
     "flat": "^5.0.2",
     "node-fetch": "^2.6.1"
   },
