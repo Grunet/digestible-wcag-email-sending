@@ -2,7 +2,15 @@ const { sendEmailsToRecipients } = require("../../../dist/index.js");
 
 (async function test_sendEmailsToRecipients() {
   const {
-    inputs: { sendGridApiKey, senderEmail, currentSelectionServerURL },
+    inputs: {
+      sendGridApiKey,
+      senderEmail,
+      currentSelectionServerURL,
+      contactsApiInputs: {
+        apiURL: contactsApiURL,
+        cognitoInfo: { username, password, appClientId, userPoolId },
+      },
+    },
     recipientsRetrieval,
     templateRetrieval,
     emailClientFactory,
@@ -37,11 +45,28 @@ const { sendEmailsToRecipients } = require("../../../dist/index.js");
         sendOnly: sendGridApiKey,
       },
     },
+    credentials: {
+      cognito: {
+        contactsApiAuth: {
+          username: username,
+          password: password,
+        },
+      },
+    },
     emails: {
       sender: senderEmail,
     },
+    ids: {
+      cognito: {
+        contactsApiAuth: {
+          appClientId: appClientId,
+          userPoolId: userPoolId,
+        },
+      },
+    },
     urls: {
       currentSelectionServer: currentSelectionServerURL,
+      contactsAPI: contactsApiURL,
     },
   };
 

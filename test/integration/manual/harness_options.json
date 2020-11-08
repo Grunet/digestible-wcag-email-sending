@@ -2,7 +2,16 @@
   "inputs": {
     "sendGridApiKey": "SG.XX...XX is what it should look like",
     "senderEmail": "Enter a real email address here",
-    "currentSelectionServerURL": "http://localhost:4000/graphql"
+    "currentSelectionServerURL": "http://localhost:4000/graphql",
+    "contactsApiInputs": {
+      "apiURL": "http://localhost:4001/graphql",
+      "cognitoInfo": {
+        "username": "Can be found in the AWS Console",
+        "password": "Can be force set via the AWS CLI",
+        "appClientId": "Can be found in the AWS Console",
+        "userPoolId": "Can be found in the AWS Console"
+      }
+    }
   },
   "recipientsRetrieval": {
     "useMocks": true,

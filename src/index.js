@@ -11,8 +11,17 @@ async function sendEmailsToRecipients(inputs) {
     apiKeys: {
       sendGrid: { sendOnly: sendOnlyApiKey },
     },
+    credentials: {
+      cognito: { contactsApiAuth: cognitoCredsForContactsAPI },
+    },
     emails: { sender },
-    urls: { currentSelectionServer: currentSelectionURL },
+    ids: {
+      cognito: { contactsApiAuth: cognitoIdsForContactsAPI },
+    },
+    urls: {
+      currentSelectionServer: currentSelectionURL,
+      contactsAPI: contactsApiURL,
+    },
   } = inputs;
 
   const staticSettings = {
@@ -32,6 +41,11 @@ async function sendEmailsToRecipients(inputs) {
       getRecipients: async function () {
         return await getRecipients({
           dependencies: inputs?.dependencies,
+          auth: {
+            credentials: cognitoCredsForContactsAPI,
+            identifiers: cognitoIdsForContactsAPI,
+          },
+          path: contactsApiURL,
         });
       },
       getTemplate: async function () {

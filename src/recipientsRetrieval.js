@@ -3,10 +3,9 @@ const AmazonCognitoIdentity = require("amazon-cognito-identity-js");
 
 async function getRecipients(inputs) {
   const getSubscribers =
-    inputs?.dependencies?.getSubscribers ??
-    require("digestible-wcag-contact-management").getSubscribers;
+    inputs?.dependencies?.getSubscribers ?? __getSubscribers;
 
-  const { subscribers } = await getSubscribers();
+  const { subscribers } = await getSubscribers(inputs);
 
   const recipients = Array.from(subscribers).map((accountObj) => {
     const { email: address, ...rest } = accountObj;
