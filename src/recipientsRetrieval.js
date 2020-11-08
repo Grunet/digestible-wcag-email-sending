@@ -24,9 +24,9 @@ async function __getSubscribers(inputs) {
     inputs?.dependencies?.tryGetAuthToken ?? __tryGetAuthToken;
   const { auth: authInfo, path } = inputs;
 
-  const jwtAccessToken = await tryGetAuthToken(authInfo);
+  const jwtAuthToken = await tryGetAuthToken(authInfo);
 
-  const resObj = await __queryContactsApiForSubscribers(path, jwtAccessToken);
+  const resObj = await __queryForSubscribers(path, jwtAuthToken);
 
   const {
     data: { subscribers },
@@ -99,7 +99,7 @@ async function __tryAuthenticatingAgainstCognito(
   });
 }
 
-async function __queryContactsApiForSubscribers(path, jwtAccessToken) {
+async function __queryForSubscribers(path, jwtAccessToken) {
   const res = await fetch(path, {
     method: "POST",
     headers: {
