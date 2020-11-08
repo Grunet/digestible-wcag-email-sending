@@ -2,10 +2,7 @@ require("node-fetch"); //amazon-cognito-identity-js uses the fetch API and needs
 const AmazonCognitoIdentity = require("amazon-cognito-identity-js");
 
 async function getRecipients(inputs) {
-  const getSubscribers =
-    inputs?.dependencies?.getSubscribers ?? __getSubscribers;
-
-  const { subscribers } = await getSubscribers(inputs);
+  const { subscribers } = await __retrieveSubscriberEmails(inputs);
 
   const recipients = Array.from(subscribers).map((accountObj) => {
     const { email: address, ...rest } = accountObj;
@@ -19,21 +16,22 @@ async function getRecipients(inputs) {
   };
 }
 
-async function __getSubscribers(inputs) {
+async function __retrieveSubscriberEmails(inputs) {
   const tryGetAuthToken =
     inputs?.dependencies?.tryGetAuthToken ?? __tryGetAuthToken;
+  const getSubscribers =
+    inputs?.dependencies?.getSubscribers ?? __getSubscribers;
   const { auth: authInfo, path } = inputs;
 
   const jwtAuthToken = await tryGetAuthToken(authInfo);
 
-  const resObj = await __queryForSubscribers(path, jwtAuthToken);
-
-  const {
-    data: { subscribers },
-  } = resObj;
+  const { subscribers: subscribersArray } = await getSubscribers(
+    path,
+    jwtAuthToken
+  );
 
   return {
-    subscribers: new Set(subscribers),
+    subscribers: new Set(subscribersArray),
   };
 }
 
@@ -99,7 +97,7 @@ async function __tryAuthenticatingAgainstCognito(
   });
 }
 
-async function __queryForSubscribers(path, jwtAccessToken) {
+async function __getSubscribers(path, jwtAccessToken) {
   const res = await fetch(path, {
     method: "POST",
     headers: {
@@ -119,9 +117,9 @@ async function __queryForSubscribers(path, jwtAccessToken) {
     `,
     }),
   });
-  const resObj = await res.json();
+  const { data } = await res.json();
 
-  return resObj;
+  return data;
 }
 
 module.exports = {
