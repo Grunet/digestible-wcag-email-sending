@@ -71,7 +71,7 @@ const { sendEmailsToRecipients } = require("../../../dist/index.js");
     },
     urls: {
       currentSelectionServer: currentSelectionServerURL,
-      contactsAPI: contactsApiURL,
+      contactsApi: contactsApiURL,
     },
   };
 

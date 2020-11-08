@@ -20,7 +20,7 @@ async function sendEmailsToRecipients(inputs) {
     },
     urls: {
       currentSelectionServer: currentSelectionURL,
-      contactsAPI: contactsApiURL,
+      contactsApi: contactsApiURL,
     },
   } = inputs;
 
