@@ -20,15 +20,11 @@ async function getRecipients(inputs) {
 }
 
 async function __getSubscribers(inputs) {
+  const tryGetAuthToken =
+    inputs?.dependencies?.tryGetAuthToken ?? __tryGetAuthToken;
   const { auth: authInfo, path } = inputs;
 
-  const { cognitoUser, authenticationDetails } = __hydrateCognitoObjects(
-    authInfo
-  );
-  const jwtAccessToken = await __tryAuthenticatingAgainstCognito(
-    cognitoUser,
-    authenticationDetails
-  );
+  const jwtAccessToken = await tryGetAuthToken(authInfo);
 
   const resObj = await __queryContactsApiForSubscribers(path, jwtAccessToken);
 
@@ -39,6 +35,18 @@ async function __getSubscribers(inputs) {
   return {
     subscribers: new Set(subscribers),
   };
+}
+
+async function __tryGetAuthToken(authInfo) {
+  const { cognitoUser, authenticationDetails } = __hydrateCognitoObjects(
+    authInfo
+  );
+  const jwtAccessToken = await __tryAuthenticatingAgainstCognito(
+    cognitoUser,
+    authenticationDetails
+  );
+
+  return jwtAccessToken;
 }
 
 function __hydrateCognitoObjects(authInfo) {

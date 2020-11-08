@@ -14,7 +14,10 @@
     }
   },
   "recipientsRetrieval": {
-    "useMocks": true,
+    "useMocksFor": {
+      "getSubscribers": true,
+      "tryGetAuthToken": true
+    },
     "mockSubscriberData": {
       "subscribers": [
         {

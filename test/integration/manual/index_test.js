@@ -18,9 +18,14 @@ const { sendEmailsToRecipients } = require("../../../dist/index.js");
 
   const inputs = {
     dependencies: {
-      getSubscribers: recipientsRetrieval.useMocks
+      getSubscribers: recipientsRetrieval.useMocksFor.getSubscribers
         ? function () {
             return recipientsRetrieval.mockSubscriberData;
+          }
+        : undefined,
+      tryGetAuthToken: recipientsRetrieval.useMocksFor.tryGetAuthToken
+        ? function () {
+            return "";
           }
         : undefined,
       getTemplateData: templateRetrieval.useMocks
