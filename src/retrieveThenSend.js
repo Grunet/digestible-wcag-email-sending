@@ -12,42 +12,50 @@ async function retrieveThenSend(dependencies) {
     ]);
 
     const recipientList = Array.from(recipients);
-    const msgDataList = recipientList.map((recipient) => {
-      return {
-        to: recipient["emailAddress"],
-        html: html,
-        text: text,
-        subject: subject,
-      };
-    });
+    const msgDataList = recipientList.map((recipient) => ({
+      to: recipient["emailAddress"],
+      html: html,
+      text: text,
+      subject: subject,
+    }));
 
-    const limiter = new Bottleneck({
-      minTime: 1000 / SENDING_RATE,
-    });
-
-    const emailSendingOutcomes = await Promise.allSettled(
-      msgDataList.map((msgData) => {
-        return limiter.schedule(async () => {
-          return await sendEmail(msgData);
-        });
-      })
-    );
-
-    emailSendingOutcomes.forEach(function (outcome, index) {
-      if (outcome.status === "rejected") {
-        console.error(
-          `Unhandled error in sending email`,
-          `\n`,
-          outcome.reason,
-          `\n`,
-          `Additional context: `,
-          msgDataList[index]
-        );
-      }
+    await __sendEmails({
+      sendEmailFn: sendEmail,
+      sendingRate: SENDING_RATE,
+      msgDataList: msgDataList,
     });
   } catch (error) {
     console.error(error);
   }
+}
+
+async function __sendEmails(inputs) {
+  const { sendEmailFn: sendEmail, sendingRate, msgDataList } = inputs;
+
+  const limiter = new Bottleneck({
+    minTime: 1000 / sendingRate,
+  });
+
+  const emailSendingOutcomes = await Promise.allSettled(
+    msgDataList.map((msgData) => {
+      return limiter.schedule(async () => {
+        return await sendEmail(msgData);
+      });
+    })
+  );
+
+  emailSendingOutcomes.forEach(function (outcome, index) {
+    if (outcome.status === "rejected") {
+      console.error(
+        `Unhandled error in sending email`,
+        `\n`,
+        outcome.reason,
+        `\n`,
+        `Additional context: `,
+        msgDataList[index]
+      );
+    }
+  });
 }
 
 module.exports = {
