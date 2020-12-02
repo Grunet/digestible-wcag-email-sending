@@ -16,16 +16,9 @@ afterEach(() => {
 
 test("Sends emails to multiple recipients", async () => {
   //ARRANGE
-  const getRecipients = jest.fn().mockReturnValue({
-    recipients: new Set([
-      {
-        emailAddress: "first@example.org",
-      },
-      {
-        emailAddress: "second@example.org",
-      },
-    ]),
-  });
+  const getRecipients = jest
+    .fn()
+    .mockReturnValue(__createMockRecipientData({ numRecipients: 2 }));
   const getTemplate = jest.fn().mockReturnValue({
     html: "<div>Email content</div>",
     subject: "Email subject",
@@ -72,16 +65,9 @@ test("Aborts email sending if error occurs while getting recipients", async () =
 
 test("Sends emails to the rest of the recipients even if sending fails for some", async () => {
   //ARRANGE
-  const getRecipients = jest.fn().mockReturnValue({
-    recipients: new Set([
-      {
-        emailAddress: "first@example.org",
-      },
-      {
-        emailAddress: "second@example.org",
-      },
-    ]),
-  });
+  const getRecipients = jest
+    .fn()
+    .mockReturnValue(__createMockRecipientData({ numRecipients: 2 }));
   const getTemplate = jest.fn().mockReturnValue({
     html: "<div>Email content</div>",
     subject: "Email subject",
@@ -113,15 +99,9 @@ test("Sends emails to the rest of the recipients even if sending fails for some"
 
 test("Sends at most 14 emails per second to avoid exceeding AWS SES rate limits", async () => {
   //ARRANGE
-  const NUM_RECIPIENTS = 15;
-
-  const getRecipients = jest.fn().mockReturnValue({
-    recipients: new Set(
-      Array.from({ length: NUM_RECIPIENTS }, (v, i) => i).map((i) => ({
-        emailAddress: `${i}@example.org`,
-      }))
-    ),
-  });
+  const getRecipients = jest
+    .fn()
+    .mockReturnValue(__createMockRecipientData({ numRecipients: 15 }));
   const getTemplate = jest.fn().mockReturnValue({
     html: "<div>Email content</div>",
     subject: "Email subject",
@@ -147,3 +127,15 @@ test("Sends at most 14 emails per second to avoid exceeding AWS SES rate limits"
 
   expect(averageSendingRate).toBeLessThan(14); //per second
 });
+
+function __createMockRecipientData(options) {
+  const { numRecipients } = options;
+
+  return {
+    recipients: new Set(
+      Array.from({ length: numRecipients }, (v, i) => i).map((i) => ({
+        emailAddress: `${i}@example.org`,
+      }))
+    ),
+  };
+}
