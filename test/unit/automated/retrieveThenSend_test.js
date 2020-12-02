@@ -19,10 +19,7 @@ test("Sends emails to multiple recipients", async () => {
   const getRecipients = jest
     .fn()
     .mockReturnValue(__createMockRecipientData({ numRecipients: 2 }));
-  const getTemplate = jest.fn().mockReturnValue({
-    html: "<div>Email content</div>",
-    subject: "Email subject",
-  });
+  const getTemplate = jest.fn().mockReturnValue(__createMockTemplateData());
   const sendEmail = jest.fn();
 
   //ACT
@@ -45,10 +42,7 @@ test("Aborts email sending if error occurs while getting recipients", async () =
         "From the getRecipients failure mock - i.e. this was hit on purpose"
       )
     );
-  const getTemplate = jest.fn().mockReturnValue({
-    html: "<div>Email content</div>",
-    subject: "Email subject",
-  });
+  const getTemplate = jest.fn().mockReturnValue(__createMockTemplateData());
   const sendEmail = jest.fn();
 
   //ACT
@@ -68,10 +62,7 @@ test("Sends emails to the rest of the recipients even if sending fails for some"
   const getRecipients = jest
     .fn()
     .mockReturnValue(__createMockRecipientData({ numRecipients: 2 }));
-  const getTemplate = jest.fn().mockReturnValue({
-    html: "<div>Email content</div>",
-    subject: "Email subject",
-  });
+  const getTemplate = jest.fn().mockReturnValue(__createMockTemplateData());
 
   const sendEmailSuccessfully = jest.fn();
   const sendEmail = jest
@@ -102,10 +93,7 @@ test("Sends at most 14 emails per second to avoid exceeding AWS SES rate limits"
   const getRecipients = jest
     .fn()
     .mockReturnValue(__createMockRecipientData({ numRecipients: 15 }));
-  const getTemplate = jest.fn().mockReturnValue({
-    html: "<div>Email content</div>",
-    subject: "Email subject",
-  });
+  const getTemplate = jest.fn().mockReturnValue(__createMockTemplateData());
 
   //This assumes that if this mock is called repeatedly in a loop, it will execute very quickly (<<1 sec) and break the rate limit
   const sendInstants = [];
@@ -137,5 +125,12 @@ function __createMockRecipientData(options) {
         emailAddress: `${i}@example.org`,
       }))
     ),
+  };
+}
+
+function __createMockTemplateData() {
+  return {
+    html: "<div>Email content</div>",
+    subject: "Email subject",
   };
 }
