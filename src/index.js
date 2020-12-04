@@ -24,24 +24,18 @@ async function sendEmailsToRecipients(inputs) {
     },
   } = inputs;
 
-  const sesStaticSettings = {
+  const staticSettings = {
     fromEmail: sender,
     fromName: "WCAG of the Day",
   };
 
-  const sesClient = createEmailClient(EmailClients.SES, sesStaticSettings);
+  const sesClient = createEmailClient(EmailClients.SES, staticSettings);
   const sendEmailViaSES = sesClient.send.bind(sesClient);
 
-  const staticSettings = {
+  const sendGridClient = createEmailClient(EmailClients.SendGrid, {
     apiKey: sendOnlyApiKey,
-    fromEmail: sender,
-    fromName: "WCAG of the Day",
-  };
-
-  const sendGridClient = createEmailClient(
-    EmailClients.SendGrid,
-    staticSettings
-  );
+    ...staticSettings,
+  });
   const sendEmailViaSendGrid = sendGridClient.send.bind(sendGridClient);
 
   try {
