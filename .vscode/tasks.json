@@ -7,13 +7,25 @@
       "label": "Manual - integration tests",
       "group": "test",
       "type": "shell",
+      "options": {
+        "env": {
+          //See https://stackoverflow.com/a/46250457/11866924 for why this is needed (for AWS SES)
+          "AWS_SDK_LOAD_CONFIG": "1"
+        }
+      },
       "command": "node ./test/integration/manual/index_test.js"
     },
     {
       "label": "Automated - unit tests",
       "group": "test",
       "type": "shell",
-      "command": "npm run unit-tests"
+      "command": "npm run test-unit"
+    },
+    {
+      "label": "Automated - integration tests",
+      "group": "test",
+      "type": "shell",
+      "command": "npm run test-integration"
     }
   ]
 }

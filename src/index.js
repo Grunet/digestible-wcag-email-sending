@@ -24,6 +24,14 @@ async function sendEmailsToRecipients(inputs) {
     },
   } = inputs;
 
+  const sesStaticSettings = {
+    fromEmail: sender,
+    fromName: "WCAG of the Day",
+  };
+
+  const sesClient = createEmailClient(EmailClients.SES, sesStaticSettings);
+  const sendEmailViaSES = sesClient.send.bind(sesClient);
+
   const staticSettings = {
     apiKey: sendOnlyApiKey,
     fromEmail: sender,
@@ -55,10 +63,17 @@ async function sendEmailsToRecipients(inputs) {
         });
       },
       sendEmail: async function (msgData) {
-        await sendEmailViaSendGrid({
-          dependencies: inputs?.dependencies,
-          msgData: msgData,
-        });
+        try {
+          await sendEmailViaSES({
+            dependencies: inputs?.dependencies,
+            msgData: msgData,
+          });
+        } catch (error) {
+          await sendEmailViaSendGrid({
+            dependencies: inputs?.dependencies,
+            msgData: msgData,
+          });
+        }
       },
     });
   } catch (error) {

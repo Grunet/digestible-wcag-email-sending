@@ -4,7 +4,8 @@
   "description": "Manages which WCAG digest emails to send and who to send them to",
   "main": "dist/index.js",
   "scripts": {
-    "test-unit": "jest --coverage --testMatch **\\test\\unit\\automated\\*_test.js"
+    "test-unit": "jest --coverage --testMatch **\\test\\unit\\automated\\*_test.js",
+    "test-integration": "jest --coverage --testMatch **\\test\\integration\\automated\\*_test.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,7 @@
   "dependencies": {
     "@sendgrid/mail": "^7.4.0",
     "amazon-cognito-identity-js": "^4.5.5",
+    "aws-sdk": "^2.802.0",
     "bottleneck": "^2.19.5",
     "flat": "^5.0.2",
     "node-fetch": "^2.6.1"

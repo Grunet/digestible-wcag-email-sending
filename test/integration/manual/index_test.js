@@ -34,7 +34,18 @@ const { sendEmailsToRecipients } = require("../../../dist/index.js");
           }
         : undefined,
       sendGrid: {
-        send: emailClientFactory.useMocks
+        send: emailClientFactory.useMocksFor.sendGrid
+          ? async function (msgDataToSend) {
+              return Promise.all(
+                emailClientFactory.outputRedirection.map((option) =>
+                  __sendRedirectionOptions[option](msgDataToSend)
+                )
+              );
+            }
+          : undefined,
+      },
+      ses: {
+        sendEmail: emailClientFactory.useMocksFor.ses
           ? async function (msgDataToSend) {
               return Promise.all(
                 emailClientFactory.outputRedirection.map((option) =>

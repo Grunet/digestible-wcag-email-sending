@@ -1,7 +1,9 @@
 const SendGrid = "SendGrid";
+const SES = "SES";
 
 const supportedClients = {
   [SendGrid]: SendGrid,
+  [SES]: SES,
 };
 
 function createEmailClient(clientId, defaultSettings) {
@@ -20,10 +22,12 @@ function createEmailClient(clientId, defaultSettings) {
       }
 
       return new SendGridAdapter(defaultSettings);
-      break;
+
+    case SES:
+      return new SESAdapter(defaultSettings);
+
     default:
       throw new Error(`${clientId}'s adapter has not been implemented yet`);
-      break;
   }
 }
 
@@ -80,6 +84,69 @@ class SendGridAdapter {
     } catch (error) {
       console.error(error);
       console.error(error?.response?.body);
+
+      throw error;
+    }
+  }
+}
+
+class SESAdapter {
+  constructor(defaults) {
+    const AWS = require("aws-sdk");
+    this.__SES = new AWS.SES();
+
+    this.__defaultSettings = { ...defaults }; //Shallow copy
+  }
+
+  async send(inputs) {
+    const sendEmail =
+      inputs?.dependencies?.ses?.sendEmail ??
+      (async (params) => {
+        return this.__SES.sendEmail(params).promise();
+      });
+
+    const { msgData } = inputs;
+    const msgDataWithDefaults = Object.assign(
+      { ...this.__defaultSettings },
+      msgData
+    ); //Shallow copy
+
+    const {
+      to,
+      fromEmail,
+      fromName,
+      subject,
+      html,
+      text,
+    } = msgDataWithDefaults;
+
+    const params = {
+      Destination: {
+        ToAddresses: [to],
+      },
+      Message: {
+        Body: {
+          Html: {
+            Charset: "UTF-8",
+            Data: html,
+          },
+          Text: {
+            Charset: "UTF-8",
+            Data: text,
+          },
+        },
+        Subject: {
+          Charset: "UTF-8",
+          Data: subject,
+        },
+      },
+      Source: `${fromName} <${fromEmail}>`,
+    };
+
+    try {
+      await sendEmail(params);
+    } catch (error) {
+      console.error(error, error.stack);
 
       throw error;
     }

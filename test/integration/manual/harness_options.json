@@ -35,7 +35,10 @@
     }
   },
   "emailClientFactory": {
-    "useMocks": true,
+    "useMocksFor": {
+      "sendGrid": true,
+      "ses": true
+    },
     "outputRedirection": ["console"]
   }
 }
