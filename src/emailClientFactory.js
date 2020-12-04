@@ -33,10 +33,10 @@ function createEmailClient(clientId, defaultSettings) {
 
 class SendGridAdapter {
   constructor(defaults) {
+    this.__defaultsManager = new DefaultsManager(defaults);
+
     this.__sgMail = require("@sendgrid/mail");
     this.__sgMail.setApiKey(defaults["apiKey"]);
-
-    this.__defaultSettings = { ...defaults }; //Shallow copy
   }
 
   async send(inputs) {
@@ -44,20 +44,9 @@ class SendGridAdapter {
       inputs?.dependencies?.sendGrid?.send ??
       this.__sgMail.send.bind(this.__sgMail);
 
-    const { msgData } = inputs;
-    const msgDataWithDefaults = Object.assign(
-      { ...this.__defaultSettings },
-      msgData
-    ); //Shallow copy
+    const { msgData } = this.__defaultsManager.applyDefaultsToInputs(inputs);
 
-    const {
-      to,
-      fromEmail,
-      fromName,
-      subject,
-      html,
-      text,
-    } = msgDataWithDefaults;
+    const { to, fromEmail, fromName, subject, html, text } = msgData;
 
     const msgDataToSend = {
       to: to,
@@ -92,10 +81,10 @@ class SendGridAdapter {
 
 class SESAdapter {
   constructor(defaults) {
+    this.__defaultsManager = new DefaultsManager(defaults);
+
     const AWS = require("aws-sdk");
     this.__SES = new AWS.SES();
-
-    this.__defaultSettings = { ...defaults }; //Shallow copy
   }
 
   async send(inputs) {
@@ -105,20 +94,9 @@ class SESAdapter {
         return this.__SES.sendEmail(params).promise();
       });
 
-    const { msgData } = inputs;
-    const msgDataWithDefaults = Object.assign(
-      { ...this.__defaultSettings },
-      msgData
-    ); //Shallow copy
+    const { msgData } = this.__defaultsManager.applyDefaultsToInputs(inputs);
 
-    const {
-      to,
-      fromEmail,
-      fromName,
-      subject,
-      html,
-      text,
-    } = msgDataWithDefaults;
+    const { to, fromEmail, fromName, subject, html, text } = msgData;
 
     const params = {
       Destination: {
@@ -150,6 +128,23 @@ class SESAdapter {
 
       throw error;
     }
+  }
+}
+
+class DefaultsManager {
+  constructor(defaults) {
+    this.__defaultSettings = { ...defaults }; //Shallow copy
+  }
+
+  applyDefaultsToInputs(inputs) {
+    const { msgData, ...rest } = inputs; //Shallow copy
+
+    const inputsWithDefaults = {
+      msgData: Object.assign({ ...this.__defaultSettings }, msgData), //Shallow copy
+      ...rest,
+    };
+
+    return inputsWithDefaults;
   }
 }
 
