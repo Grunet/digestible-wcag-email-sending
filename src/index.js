@@ -69,6 +69,8 @@ async function sendEmailsToRecipients(inputs) {
             msgData: msgData,
           });
         } catch (error) {
+          console.error(error);
+
           await sendEmailViaSendGrid({
             dependencies: inputs?.dependencies,
             msgData: msgData,

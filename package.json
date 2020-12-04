@@ -22,7 +22,6 @@
     "amazon-cognito-identity-js": "^4.5.5",
     "aws-sdk": "^2.802.0",
     "bottleneck": "^2.19.5",
-    "flat": "^5.0.2",
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {

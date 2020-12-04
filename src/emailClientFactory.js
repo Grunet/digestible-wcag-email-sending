@@ -46,7 +46,14 @@ class SendGridAdapter {
 
     const { msgData } = this.__defaultsManager.applyDefaultsToInputs(inputs);
 
-    const { to, fromEmail, fromName, subject, html, text } = msgData;
+    const {
+      to,
+      fromEmail,
+      fromName,
+      subject,
+      html,
+      text,
+    } = __createValueValidationProxy(msgData);
 
     const msgDataToSend = {
       to: to,
@@ -58,15 +65,6 @@ class SendGridAdapter {
       html: html,
       text: text,
     };
-
-    const flattenedMsgDataToSend = require("flat")(msgDataToSend);
-    for (const [key, value] of Object.entries(flattenedMsgDataToSend)) {
-      if (!value) {
-        throw new Error(
-          `"${key}" is missing from the inputs to the SendGrid mail sending api`
-        );
-      }
-    }
 
     try {
       await send(msgDataToSend);
@@ -96,7 +94,14 @@ class SESAdapter {
 
     const { msgData } = this.__defaultsManager.applyDefaultsToInputs(inputs);
 
-    const { to, fromEmail, fromName, subject, html, text } = msgData;
+    const {
+      to,
+      fromEmail,
+      fromName,
+      subject,
+      html,
+      text,
+    } = __createValueValidationProxy(msgData);
 
     const params = {
       Destination: {
@@ -147,6 +152,22 @@ class DefaultsManager {
     return inputsWithDefaults;
   }
 }
+
+function __createValueValidationProxy(obj) {
+  return new Proxy(obj, valueValidationProxyHandler);
+}
+
+const valueValidationProxyHandler = {
+  get: function (obj, prop) {
+    const value = obj[prop];
+
+    if (value === undefined) {
+      throw new Error(`The value of ${prop} is undefined on ${obj}`);
+    }
+
+    return value;
+  },
+};
 
 module.exports = {
   Clients: supportedClients,
