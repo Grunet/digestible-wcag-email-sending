@@ -35,22 +35,20 @@ const { sendEmailsToRecipients } = require("../../../dist/index.js");
         : undefined,
       sendGrid: {
         send: emailClientFactory.useMocksFor.sendGrid
-          ? async function (msgDataToSend) {
-              return Promise.all(
-                emailClientFactory.outputRedirection.map((option) =>
-                  __sendRedirectionOptions[option](msgDataToSend)
-                )
+          ? async (msgDataToSend) => {
+              return __redirectSentEmail(
+                emailClientFactory.outputRedirection,
+                msgDataToSend
               );
             }
           : undefined,
       },
       ses: {
         sendEmail: emailClientFactory.useMocksFor.ses
-          ? async function (msgDataToSend) {
-              return Promise.all(
-                emailClientFactory.outputRedirection.map((option) =>
-                  __sendRedirectionOptions[option](msgDataToSend)
-                )
+          ? async (msgDataToSend) => {
+              return __redirectSentEmail(
+                emailClientFactory.outputRedirection,
+                msgDataToSend
               );
             }
           : undefined,
@@ -88,6 +86,14 @@ const { sendEmailsToRecipients } = require("../../../dist/index.js");
 
   await sendEmailsToRecipients(inputs);
 })();
+
+async function __redirectSentEmail(outputRedirectionList, msgDataToSend) {
+  return Promise.all(
+    outputRedirectionList.map((option) =>
+      __sendRedirectionOptions[option](msgDataToSend)
+    )
+  );
+}
 
 const __sendRedirectionOptions = {
   console: __sendToConsole,
