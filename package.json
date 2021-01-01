@@ -20,7 +20,7 @@
   "dependencies": {
     "@sendgrid/mail": "^7.4.0",
     "amazon-cognito-identity-js": "^4.5.5",
-    "aws-sdk": "^2.802.0",
+    "aws-sdk": "^2.820.0",
     "bottleneck": "^2.19.5",
     "node-fetch": "^2.6.1"
   },
